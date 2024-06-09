@@ -109,7 +109,7 @@ def p_expression_comparison(p):
             if type(p[1]) == type(p[3]):
                 p[0] = 'Truth' if p[1] <= p[3] else 'Lie'
             else:
-                print(f"Cannot compare different types")
+                print(f"Cannot compare different J")
         elif p[2] == '<!>':
             p[0] = 'Truth' if p[1] != p[3] else 'Lie'    
     else:
