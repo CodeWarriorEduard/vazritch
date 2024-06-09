@@ -9,28 +9,35 @@ reserved = {
     'and': 'AND',
     'or': 'OR',
     'not': 'NOT',
-    'process': 'FUNCTION'
+    'process': 'FUNCTION',
+    'show' : 'SHOW',
+    'Truth' : 'TRUE',
+    'Lie' : 'FALSE',
+    'out' : 'RETURN'
 }
 
 tokens = [
-   'INTNUMBER',
-   'FLOATNUMBER',
-   'PLUS',
-   'MINUS',
-   'MULTIPLICATION',
-   'DIVIDE',
-   'LPAREN',
-   'RPAREN',
-   'LBRACE',
-   'RBRACE',
-   'EQUALSEQUALS',
-   'LESSEQUALS',
-   'GREATEREQUALS',
-   'NOTEQUALS',
-   'EQUALS',
-   'COMMENT',
-   'VAR',
-   'STRING'
+   'INTNUMBER', 
+   'FLOATNUMBER', 
+   'PLUS', 
+   'MINUS', 
+   'MULTIPLICATION', 
+   'DIVIDE', 
+   'LPAREN', 
+   'RPAREN', 
+   'LBRACE', 
+   'RBRACE', 
+   "LESS", 
+   "GREATER",
+   'EQUALSEQUALS',  
+   'LESSEQUALS', 
+   'GREATEREQUALS', 
+   'NOTEQUALS', 
+   'EQUALS', 
+   'COMMENT', 
+   'VAR', 
+   'STRING',
+   "COMMA",
 ] + list(reserved.values())
 
 # Operations
@@ -46,6 +53,8 @@ t_LBRACE  = r'\{'
 t_RBRACE  = r'\}'
 
 # Comparison
+t_LESS  = r'<'
+t_GREATER  = r'>'
 t_EQUALSEQUALS  = r'=='
 t_LESSEQUALS  = r'<='
 t_GREATEREQUALS  = r'>='
@@ -54,5 +63,8 @@ t_NOTEQUALS  = r'<!>'
 # Assignment
 t_EQUALS  = r'='
 
+# Comma
+t_COMMA  = r','
+
 # A string containing ignored characters (spaces and tabs)
-t_ignore  = ' \t'
+t_ignore  = " \t \r\n \r \n"
