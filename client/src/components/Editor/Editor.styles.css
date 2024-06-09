@@ -1,0 +1,116 @@
+.et-container{
+    background-color: #444444;
+    width: 100%;
+    display: grid;
+    padding: 20px;
+    height: 80vh;
+    grid-template-columns: 50% 50%;
+}
+
+
+.main-content{
+    width: 100%;
+    display: flex;
+    background-color: #444444;
+}
+
+.editor-container{
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.principal{
+    background-color: #506F86;
+}
+    
+.terminal-container{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;   
+}
+        
+        
+.terminal-impl{
+    width: 100%;
+    padding: 20px;
+    overflow-y: scroll;
+    height: 60vh;
+    background-color: black;
+}
+    
+    
+.btn-run{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position:fixed;
+    bottom:6%;
+    right:2%;
+    cursor: pointer;
+}
+
+
+
+@media (max-width: 600px) {
+    
+    .et-container{
+        background-color: #444444;
+        width: 100%;
+        display: grid;
+        padding: 20px;
+        height: 100vh;
+        grid-template-columns: 100%;
+        grid-template-rows: auto auto;
+    }
+    
+    .editor-impl{
+        order: 1;
+        width: 100%;    
+
+
+    }
+
+    .options-content{
+        width: 100%;
+    }
+
+    .MuiBox-root{
+        width: 100%;
+    }
+    .css-0{
+        max-width: 100%;
+    }
+    .terminal-impl{
+        order: 2;
+        width: 100%;
+    }
+
+    .sidebar-container{
+        width: 100%;
+    }
+    .main-content{
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .principal{
+        height: auto;
+        min-height: 220vh;
+    }
+
+    .btn-run{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        position:fixed;
+        bottom:15%;
+        right:2%;
+    }
+    
+}
