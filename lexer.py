@@ -45,44 +45,44 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-# Test
-data = '''
+# # Test
+# data = '''
 
-22
-1.5 .5
-+ - * /
-()
-{}
-==
->=
-<=
-<!>
-=
-condition
-otherwise_if
-otherwise
-during
-make
-cycle
-and
-or
-not
-miVariable
-mi_variable
-miVar
-"Tremendo"
-process
-show
-###comentario
-,
-'''
+# 22
+# 1.5 .5
+# + - * /
+# ()
+# {}
+# ==
+# >=
+# <=
+# <!>
+# =
+# condition
+# otherwise_if
+# otherwise
+# during
+# make
+# cycle
+# and
+# or
+# not
+# miVariable
+# mi_variable
+# miVar
+# "Tremendo"
+# process
+# show
+# ###comentario
+# ,
+# '''
 
-# Data input
-lexer.input(data)
+# # Data input
+# lexer.input(data)
 
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break  
-    print(f"Type: {tok.type} | Value: {tok.value} | Line: {tok.lineno} | Position: {tok.lexpos}")
+# # Tokenize
+# while True:
+#     tok = lexer.token()
+#     if not tok: 
+#         break  
+#     print(f"Type: {tok.type} | Value: {tok.value} | Line: {tok.lineno} | Position: {tok.lexpos}")
