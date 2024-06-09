@@ -72,6 +72,9 @@ mi_variable
 miVar
 "Tremendo"
 process
+show
+###comentario
+,
 '''
 
 # Data input
