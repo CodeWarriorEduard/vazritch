@@ -242,13 +242,10 @@ def p_empty(p):
     'empty :'
     pass
 
-# Expression rule placeholder (you need to define what an expression is)
 def p_expression(p):
     '''expression : if_statement
                   | VAR'''
     p[0] = p[1]
-
-#q
 
 # Error rule for syntax errors
 def p_error(p):

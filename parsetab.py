@@ -69,6 +69,6 @@ _lr_productions = [
   ('else_clause -> ELSE LBRACE expression RBRACE','else_clause',4,'p_else_clause','parse.py',233),
   ('else_clause -> empty','else_clause',1,'p_else_clause','parse.py',234),
   ('empty -> <empty>','empty',0,'p_empty','parse.py',242),
-  ('expression -> if_statement','expression',1,'p_expression','parse.py',247),
-  ('expression -> VAR','expression',1,'p_expression','parse.py',248),
+  ('expression -> if_statement','expression',1,'p_expression','parse.py',246),
+  ('expression -> VAR','expression',1,'p_expression','parse.py',247),
 ]
