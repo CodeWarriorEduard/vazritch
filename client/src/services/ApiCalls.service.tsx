@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-catch */
+
 import HttpClient from "../adapters/Axios.adapter";
 
 
@@ -6,6 +8,7 @@ const client = new HttpClient(url?? '');
 
 
 async function getHealth(endpoint:string){
+
     try {
         const response = await client.getMethod(endpoint);
         return response.data;
