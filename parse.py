@@ -204,9 +204,51 @@ def p_factor_neg(p):
 
 # If, elif and else
 def p_if_statement(p):
-    '''expression : IF LPAREN expression RPAREN LBRACE expression RBRACE'''
+    '''if_statement : IF LPAREN expression RPAREN LBRACE expression RBRACE elif_clauses else_clause
+                    | IF LPAREN expression RPAREN LBRACE expression RBRACE elif_clauses
+                    | IF LPAREN expression RPAREN LBRACE expression RBRACE else_clause
+                    | IF LPAREN expression RPAREN LBRACE expression RBRACE'''
     if p[3] == 'Truth':
         p[0] = p[6]
+    elif len(p) == 9 and p[8] is not None:
+        p[0] = p[8]
+    elif len(p) >= 8 and p[8] is not None:
+        p[0] = p[8]
+    else:
+        p[0] = p[9]
+
+# Elif
+def p_elif_clauses(p):
+    '''elif_clauses : ELIF LPAREN expression RPAREN LBRACE expression RBRACE elif_clauses
+                    | ELIF LPAREN expression RPAREN LBRACE expression RBRACE'''
+    if p[3] == 'Truth':
+        p[0] = p[6]
+    elif len(p) == 9:
+        p[0] = p[8]
+    else:
+        p[0] = None
+
+# Else
+def p_else_clause(p):
+    '''else_clause : ELSE LBRACE expression RBRACE
+                   | empty'''
+    if len(p) == 5:
+        p[0] = p[3]
+    else:
+        p[0] = None
+
+# Empty rule
+def p_empty(p):
+    'empty :'
+    pass
+
+# Expression rule placeholder (you need to define what an expression is)
+def p_expression(p):
+    '''expression : if_statement
+                  | VAR'''
+    p[0] = p[1]
+
+#q
 
 # Error rule for syntax errors
 def p_error(p):
