@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import './Options.styles.css'
 
 
+interface propsType{
+  isOpen: boolean;
+}
 
 
-
-function Options({isOpen}) {
+function Options({isOpen}:propsType) {
   return (
     
     <div className={isOpen? 'options-container open': 'options-container'}>

@@ -32,12 +32,12 @@ function EditorC() {
   const run = async()=>{
     const response = await processCode('/code', null,{ params: {code: text}})
     setOutput(() => {
-      return response.map((el, index) => {
+      return response.map((el: string[], index: number) => {
         return (
           <div key={index}>
             <p className="tabLin" key={index}>{`Content of Line ${index + 1}:`}</p>
             {
-              el.length > 0 ? el.map((token, idx) => (<p className="tabTok" key={idx}> {token}</p>)) :
+              el.length > 0 ? el.map((token: string, idx:number) => (<p className="tabTok" key={idx}> {token}</p>)) :
               <p className="tabTok">Line Empty </p>
             }
             <br />
@@ -47,8 +47,8 @@ function EditorC() {
     })
   }
 
-  const handleEditorChange = (value) =>{
-    const Ntext = value; //Quito los saltos de linea.
+  const handleEditorChange = (value:string|undefined) =>{
+    const Ntext = value?? ""; //Quito los saltos de linea.
     setText(Ntext);
   }
 
