@@ -47,9 +47,8 @@ def p_factor_var(p):
 
 def p_assignment(p):
     'factor : VAR EQUALS expression'
-    if p[3] in variables or isinstance(p[3], (int, str, float)):
-        variables[p[1]] = p[3]
-        p[0] = p[3] 
+    variables[p[1]] = p[3]
+    p[0] = p[3] 
 
 def p_factor_boolean(p):
     '''factor : TRUE
@@ -77,7 +76,23 @@ def p_expression_or(p):
         elif(p[1]=='Truth' and p[3]=='Lie' or p[1]=='Lie' and p[3]=='Truth'):
             p[0] = 'Truth'
         else:
-            p[0] = p[3]
+            if(p[1] == 'Lie' or p[3] == 'Lie'):
+                a1 = p[1]
+                a2 = p[3]
+                if(a1 != 'Lie'):
+                    p[0] = a1
+                else:
+                    p[0] = a2
+            else:
+                p[0] = p[1]
+
+def p_expression_not(p):
+    'expression : NOT expression'
+    if isinstance(p[2], (str, int, float)):
+        if p[2] == 'Lie':
+            p[0] = 'Truth'
+        else:
+            p[0] = 'Lie'
 
 def p_expression_comparison(p):
     '''expression : expression EQUALSEQUALS expression
@@ -91,22 +106,30 @@ def p_expression_comparison(p):
         if p[2] == '==':
             p[0] = 'Truth' if p[1] == p[3] else 'Lie'
         elif p[2] == '>':
-            if type(p[1]) == type(p[3]):
+            if isinstance(p[1], (int, float)) and isinstance(p[3], (int,float)):
+                p[0] = 'Truth' if p[1] > p[3] else 'Lie'
+            elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] > p[3] else 'Lie'
             else:
                 print(f"Cannot compare different types")
         elif p[2] == '<':
-            if type(p[1]) == type(p[3]):
+            if isinstance(p[1], (int, float)) and isinstance(p[3], (int,float)):
+                p[0] = 'Truth' if p[1] < p[3] else 'Lie'
+            elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] < p[3] else 'Lie'
             else:
                 print(f"Cannot compare different types")
         elif p[2] == '>=':
-            if type(p[1]) == type(p[3]):
+            if isinstance(p[1], (int, float)) and isinstance(p[3], (int,float)):
+                p[0] = 'Truth' if p[1] >= p[3] else 'Lie'
+            elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] >= p[3] else 'Lie'
             else:
                 print(f"Cannot compare different types")
         elif p[2] == '<=':
-            if type(p[1]) == type(p[3]):
+            if isinstance(p[1], (int, float)) and isinstance(p[3], (int,float)):
+                p[0] = 'Truth' if p[1] <= p[3] else 'Lie'
+            elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] <= p[3] else 'Lie'
             else:
                 print(f"Cannot compare different types")
@@ -135,6 +158,18 @@ def p_factor_not(p):
     'factor : NOT'
     p[0] = p[1]
 
+def p_factor_if(p):
+    'factor : IF'
+    p[0] = p[1]
+
+def p_factor_elif(p):
+    'factor : ELIF'
+    p[0] = p[1]
+
+def p_factor_else(p):
+    'factor : ELSE'
+    p[0] = p[1]
+
 def p_factor_intnum(p):
     'factor : INTNUMBER'
     p[0] = p[1]
@@ -155,7 +190,6 @@ def p_factor_show(p):
     'factor : SHOW LPAREN expression RPAREN'
     p[0] = p[3]
 
-
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
     p[0] = p[2]
@@ -168,6 +202,12 @@ def p_factor_neg(p):
     'factor : MINUS factor'
     p[0] = -p[2]
 
+# If, elif and else
+def p_if_statement(p):
+    '''expression : IF LPAREN expression RPAREN LBRACE expression RBRACE'''
+    if p[3] == 'Truth':
+        p[0] = p[6]
+
 # Error rule for syntax errors
 def p_error(p):
     print("Syntax error in input!")
@@ -176,10 +216,11 @@ def p_error(p):
 parser = yacc.yacc()
 
 while True:
-   try:
-       s = input('\nvazritch > ')
-   except EOFError:
-       break
-   if not s: continue
-   result = parser.parse(s)
-   print(result)
+    try:
+        s = input('\nvazritch > ')
+    except EOFError:
+        break
+    if not s: continue
+    result = parser.parse(s)
+    if result is not None:
+        print(result)
