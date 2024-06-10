@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-client/node_modules
+node_modules
 dist
 dist-ssr
 *.local
@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 ### dotenv ###
-client/.env
+.env
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
