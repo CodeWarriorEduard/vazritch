@@ -1,9 +1,8 @@
-/* eslint-disable no-useless-catch */
 import HttpClient from "../adapters/Axios.adapter";
 
 
 const url = process.env.REACT_APP_BACKEND;
-const client = new HttpClient(url);
+const client = new HttpClient(url?? '');
 
 
 async function getHealth(endpoint:string){
