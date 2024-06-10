@@ -9,7 +9,7 @@ import Footer from "../../components/Footer/Footer";
 
 function Docs() {
   const converter = new Showdown.Converter();
-  const [data, setData] = useState();
+  const [data, setData] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   const infoHl = [
@@ -49,7 +49,7 @@ function Docs() {
   }, [])
 
 
-  const findWord = (e) => {  
+  const findWord = (e:string) => {  
     const elements = document.querySelectorAll('.info-data h2, .info-data h3');
     elements.forEach(element => {
       const text = element.innerHTML;
@@ -85,7 +85,7 @@ function Docs() {
                 </ul>
             </div>
 
-          <div dangerouslySetInnerHTML={{__html: data}} style={{color:"black"}} className="info-data wrapper"></div>
+          <div dangerouslySetInnerHTML={{__html: data || ''}} style={{color:"black"}} className="info-data wrapper"></div>
 
           </div>
           <Footer/>
