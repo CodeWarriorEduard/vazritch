@@ -82,7 +82,7 @@ function EditorC() {
       </div>
       <div className='btn-run'>
         <IconButton onClick={run}>
-          <PlayCircle sx={{fontSize:'5rem'}}/>
+          <PlayCircle sx={{fontSize:'4rem'}}/>
         </IconButton>
         <p>Run Code</p>
       </div>

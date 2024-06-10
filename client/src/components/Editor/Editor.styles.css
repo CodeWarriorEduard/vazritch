@@ -44,13 +44,17 @@
     
     
 .btn-run{
+    background-color: #D89216;
     display: flex;
+    border-radius: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     position:fixed;
-    bottom:6%;
-    right:2%;
+    bottom:8%;
+    right:4%;
     cursor: pointer;
 }
 
