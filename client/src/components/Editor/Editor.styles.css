@@ -3,7 +3,7 @@
     width: 100%;
     display: grid;
     padding: 20px;
-    height: 80vh;
+    height: 100vh;
     grid-template-columns: 50% 50%;
 }
 
