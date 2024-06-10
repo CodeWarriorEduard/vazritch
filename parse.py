@@ -208,14 +208,22 @@ def p_if_statement(p):
                     | IF LPAREN expression RPAREN LBRACE expression RBRACE elif_clauses
                     | IF LPAREN expression RPAREN LBRACE expression RBRACE else_clause
                     | IF LPAREN expression RPAREN LBRACE expression RBRACE'''
-    if p[3] == 'Truth':
-        p[0] = p[6]
-    elif len(p) == 9 and p[8] is not None:
-        p[0] = p[8]
-    elif len(p) >= 8 and p[8] is not None:
-        p[0] = p[8]
-    else:
-        p[0] = p[9]
+    
+    if len(p) == 8: #Only IF
+        if p[3] == 'Truth':
+            p[0] = p[6]
+    if len(p) == 9: #IF AND ELIF OR IF AND ELSE
+        if p[3] == 'Truth':
+            p[0] = p[6]
+        else:
+            p[0] = p[8]
+    if len(p) == 10: #IF AND MULTIPLE ELIF AND ELSE
+        if p[3] == 'Truth':
+            p[0] = p[6]
+        elif p[8] != None:
+            p[0] = p[8]
+        else:
+            p[0] = p[9]
 
 # Elif
 def p_elif_clauses(p):
