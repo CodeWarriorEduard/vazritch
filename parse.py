@@ -341,8 +341,8 @@ def parsear(linesFormat):
                 if erroraa:
                     output.append(('ERROR', erroraa))
                     erroraa = None
-            if result is not None :
-                output.append(result)
+                if result is not None :
+                    output.append(result)
         except EOFError:
             break
 
