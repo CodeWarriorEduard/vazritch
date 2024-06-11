@@ -1,6 +1,16 @@
+
 # VAZRITCH
 
 VAZRTICH es un lenguaje de programación creado con motivos académicos, a continuación se muestra una pequeña guía de usuario para poder usarlo.
+
+
+### Arquitectura usada
+Se usó una arquitectura limpia para separar por capas las distintas funcionalidades de la aplicación.
+
+![Clean Coder Blog](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
+
+Esta arquitectura nos permite modularizar nuestro código y manejar un flujo de datos mucho más organizado.
+
 
 ### Tipos de datos
 
