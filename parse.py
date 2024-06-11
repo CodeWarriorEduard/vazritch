@@ -336,7 +336,7 @@ def parsear(linesFormat):
     result = None
     for line in linesFormat: 
         try:
-            if line not in " \t \r\n \r \n":
+            if line not in "\r\n":
                 result = parser.parse(line)
                 if erroraa:
                     output.append(('ERROR', erroraa))
