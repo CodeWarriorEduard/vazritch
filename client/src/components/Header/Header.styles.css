@@ -3,6 +3,9 @@ header{
     padding-right: 40px;
     background-color: #171717;
     display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

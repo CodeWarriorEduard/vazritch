@@ -13,15 +13,13 @@ function Docs() {
   const [loading, setLoading] = useState(false);
 
   const infoHl = [
+    "Arquitectura",
     "Tipos de datos",
     "Declaración de variables",
     "Comentarios",
     "Imprimir en pantalla",
     "Operaciones matemáticas básicas",
-    "Condicionales",
-    "Operadores logicos y de comparación",
-    "Funciones",
-    "Ciclos"
+    "Condicionales"
   ];
  
   const url = "https://raw.githubusercontent.com/CodeWarriorEduard/vazritch/main/README.md"

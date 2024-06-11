@@ -17,10 +17,11 @@ async function getHealth(endpoint:string){
     }
 }
 
-async function processCode(endpoint:string, data?:string|null|undefined, options = {}){
-    
+async function processCode(endpoint: string, data:string|null|undefined, options = {}) {
+
     try {
-        const response = await client.postMethod(endpoint, data, options);
+        const response = await client.postMethod(endpoint, data ,options);
+        console.log(response)
         return response.data;
     } catch (error) {
         throw error;

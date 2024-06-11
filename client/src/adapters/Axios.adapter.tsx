@@ -4,10 +4,13 @@ class HttpClient{
 
     private axiosInstance;
 
-    constructor(url:string){
-        this.axiosInstance = axios.create({baseURL: url});
+    constructor(url: string) {
+        this.axiosInstance = axios.create({
+            baseURL: url,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
-
+    
     get axiosProperties(){
         return this.axiosInstance;
     }
@@ -17,8 +20,9 @@ class HttpClient{
          
     }
 
-    postMethod(url: string, data?:string|null|undefined, options={}){
-        return this.axiosInstance.post(url, data, options)
+    postMethod(url: string, data: string|null|undefined, params = {}) {
+        console.log(params)
+        return this.axiosInstance.post(url, data, { params });
     }
 
 }

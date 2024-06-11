@@ -9,7 +9,7 @@ import {processCode } from '../../services/ApiCalls.service';
 
 function EditorC() {
   const [text, setText] = useState('');
-  const [output, setOutput] = useState('');
+  const [output, setOutput] = useState([]);
 
   loader.init().then((monaco) =>{
     monaco.editor.defineTheme("qleon", {
@@ -29,24 +29,44 @@ function EditorC() {
     monaco.editor.setTheme("vazritch");
   })
 
-  const run = async()=>{
-    const response = await processCode('/code', null,{ params: {code: text}})
-    setOutput(() => {
-      return response.map((el: string[], index: number) => {
-        return (
+  const run = async () => {
+   
+    try {
+      const response = await processCode('/code', null, { expression: text });
+  
+      if (response.error) {
+        console.error('Error processing code:', response.error);
+        return;
+      }
+  
+      if (!response.result) {
+        console.error('No result returned from backend');
+        return;
+      }
+  
+      let outputText;
+      if (typeof response.result === 'string') {
+        outputText = response.result.split('\n').map((line:string, index:number) => (
           <div key={index}>
-            <p className="tabLin" key={index}>{`Content of Line ${index + 1}:`}</p>
-            {
-              el.length > 0 ? el.map((token: string, idx:number) => (<p className="tabTok" key={idx}> {token}</p>)) :
-              <p className="tabTok">Line Empty </p>
-            }
+            <p>{`Content of Line ${index + 1}:`}</p>
+            <p>{line}</p>
             <br />
           </div>
-        )
-      })
-    })
+        ));
+      } else {
+        outputText = (
+          <div>
+            <p>{`Result: ${JSON.stringify(response.result)}`}</p>
+          </div>
+        );
+      }
+  
+      setOutput(outputText);
+    } catch (error) {
+      console.error('Error processing code:', error);
+    }
   }
-
+  
   const handleEditorChange = (value:string|undefined) =>{
     const Ntext = value?? ""; //Quito los saltos de linea.
     setText(Ntext);
@@ -61,24 +81,25 @@ function EditorC() {
             <Box>
               <Tab label="Your Code" style={{backgroundColor:"#222222", borderTopLeftRadius: "10px", color:"white"}}/>
             </Box>
-            <Editor height="60vh" width="100%"theme='qleon' onChange={handleEditorChange} className='editor-impl'/>
+            <Editor height="60vh" width="100%"theme='vazritch' onChange={handleEditorChange} className='editor-impl'/>
             </div>
             <div className='terminal-container grid-el'>
               <Box>
                 <Tab label="Output" style={{backgroundColor:"#222222", borderTopLeftRadius: "10px", color:"white"}}/>
               </Box>
               {       
-                output.length >0?( // Terminar 
-                <div className="terminal-impl">{"LEXEMA:"}
-                <br />
-                <br />
-                {output}
-                </div> 
-                
-                ):(
-                <div className="terminal-impl">Please write something before running!</div>     
+                output ? ( 
+                  <div className="terminal-impl">
+                    {"OUTPUT:"}
+                    <br />
+                    <br />
+                    {output}
+                  </div> 
+                ) : (
+                  <div className="terminal-impl">Please write something before running!</div>     
                 )                 
               }     
+
       </div>
       <div className='btn-run'>
         <IconButton onClick={run}>
