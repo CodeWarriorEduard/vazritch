@@ -352,11 +352,17 @@ def parsear(linesFormat):
             if result[0] in ('SHOW', 'ERROR'):
                 outputFormat.append(result[1])
         elif type(result) is list:
-            if result[0][0] in ('SHOW', 'ERROR'):
-                outputFormat.append(result[0][1])
+            process_nested_lists(result, outputFormat)
 
     return str(outputFormat)
 
+def process_nested_lists(input_list, outputFormat):
+    for element in input_list:
+        if isinstance(element, list):
+            if len(element) > 0 and element[0] in ('SHOW', 'ERROR'):
+                outputFormat.append(element[1])
+            else:
+                process_nested_lists(element, outputFormat)
 
 
 class CodeInput(BaseModel):
