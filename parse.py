@@ -16,13 +16,13 @@ def p_binary_operators(p):
             elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = p[1] + p[3]
             else:
-                p[0] = "Cannot concatenate non-strings to strings" #CHANG
+                p[0] = ('ERROR',  "Cannot concatenate non-strings to strings") #CHANG
 
         elif p[2] == '-':
             if not isinstance(p[1], str) and not isinstance(p[3], str):
                 p[0] = p[1] - p[3]
             else:
-                p[0] = 'Unsupported operation' 
+                p[0] = ('ERROR','Unsupported operation') 
 
         elif p[2] == '*':
             if isinstance(p[1], (int, float)) and isinstance(p[3], (int, float)):
@@ -32,19 +32,19 @@ def p_binary_operators(p):
             elif isinstance(p[1], str) and isinstance(p[3], int):
                 p[0] = p[1] * p[3]
             else:
-                print("Cannot multiply sequence by non-int of type 'float'")
+                p[0] = ('ERROR',"Cannot multiply sequence by non-int of type 'float'")
 
         elif p[2] == '/':
             if not isinstance(p[1], str) and not isinstance(p[3], str):
                 p[0] = p[1] / p[3]
             else:
-                print("Unsupported operation")
+               p[0] = ('ERROR',"Unsupported operation")
 
 # Definición de variables y asignaciones
 def p_factor_var(p):
     'factor : VAR'
     if p[1] not in variables:
-        print(f"Undefined variable => {p[1]}")
+        p[0] = ('ERROR',f"Undefined variable => {p[1]}")
     else:
         p[0] = variables[p[1]]
 
@@ -116,32 +116,32 @@ def p_expression_comparison(p):
             elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] > p[3] else 'Lie'
             else:
-                print("Cannot compare different types")
+                p[0] = ('ERROR',"Cannot compare different types")
         elif p[2] == '<':
             if isinstance(p[1], (int, float)) and isinstance(p[3], (int, float)):
                 p[0] = 'Truth' if p[1] < p[3] else 'Lie'
             elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] < p[3] else 'Lie'
             else:
-                print("Cannot compare different types")
+                p[0] = ('ERROR',"Cannot compare different types")
         elif p[2] == '>=':
             if isinstance(p[1], (int, float)) and isinstance(p[3], (int, float)):
                 p[0] = 'Truth' if p[1] >= p[3] else 'Lie'
             elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] >= p[3] else 'Lie'
             else:
-                print("Cannot compare different types")
+                p[0] = ('ERROR',"Cannot compare different types")
         elif p[2] == '<=':
             if isinstance(p[1], (int, float)) and isinstance(p[3], (int, float)):
                 p[0] = 'Truth' if p[1] <= p[3] else 'Lie'
             elif isinstance(p[1], str) and isinstance(p[3], str):
                 p[0] = 'Truth' if p[1] <= p[3] else 'Lie'
             else:
-                print("Cannot compare different types")
+                p[0] = ('ERROR',"Cannot compare different types")
         elif p[2] == '!=':
             p[0] = 'Truth' if p[1] != p[3] else 'Lie'    
     else:
-        print("Unsupported operation")
+        p[0] = ('ERROR',"Unsupported operation")
 
 # Definición de términos y factores
 def p_expression_term(p):
@@ -271,17 +271,18 @@ def p_expression(p):
     p[0] = p[1]
 
 def p_error(p):
-    print("Syntax error in input!")
+    pass
 
 # Construir el parser
 parser = yacc.yacc()
 
 #Aqui debe llegar del front una lista de string donde cada espacion representa una linea
-inputLines = ["'a'+1"] 
+inputLines = ["if()"] 
 
 s = [] 
 inIfBlock = False
 ifBlockLines = []
+
 
 for line in inputLines:
     if inIfBlock:
