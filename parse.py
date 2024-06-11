@@ -299,24 +299,23 @@ parser = yacc.yacc()
 
 def formatLines(lines:str):
     s = [] 
-    inIfBlock = False
     ifBlockLines = []
+    ifBlockCount = 0
 
     lin = lines.splitlines()
-
     for line in lin:
-        if inIfBlock:
-            if line.strip().endswith("}"):
-                ifBlockLines.append(line)
+        if line.strip().startswith("condition"):
+            ifBlockCount += 1
+            ifBlockLines.append(line)
+        elif line.strip().endswith("}"):
+            ifBlockLines.append(line)
+            ifBlockCount -= 1
+            if ifBlockCount == 0:
                 ifBlock = ' '.join(ifBlockLines)
                 s.append(ifBlock)  
                 ifBlockLines = []
-                inIfBlock = False
-            else:
-                ifBlockLines.append(line)
         else:
-            if line.strip().startswith("condition"):
-                inIfBlock = True
+            if ifBlockCount > 0:
                 ifBlockLines.append(line)
             else:
                 s.append(line) 
@@ -389,6 +388,7 @@ def evaluate_expression(expression):
     print(expression)
     try:
         lines = formatLines(expression)
+        print(lines)
         result = parsear(lines)
         return {"result": result}
     except Exception as e:
