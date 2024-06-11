@@ -352,9 +352,7 @@ def parsear(linesFormat):
             if result[0] in ('SHOW', 'ERROR'):
                 outputFormat.append(result[1])
         elif type(result) is list:
-            for elemen in result:
-                if elemen[0][0] in ('SHOW', 'ERROR'):
-                    outputFormat.append(result[0][1])
+            outputFormat.append(result)
 
     return str(outputFormat)
 
