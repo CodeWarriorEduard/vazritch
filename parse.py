@@ -1,5 +1,9 @@
-import ply.yacc as yacc
 from lexer import tokens
+import ply.yacc as yacc
+from pydantic import BaseModel
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 variables = {}
 
@@ -194,7 +198,7 @@ def p_factor_comment(p):
 
 def p_factor_show(p):
     'factor : SHOW LPAREN expression RPAREN'
-    p[0] = p[3]
+    p[0] = ('SHOW', p[3])
 
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
@@ -270,51 +274,125 @@ def p_expression(p):
                   | VAR'''
     p[0] = p[1]
 
+# Regla de error para expresiones
+def p_expression_error(p):
+    'expression : error'
+    p[0] = ('ERROR', "Unsupported operation")
+
+# Manejo de errores de sintaxis
+erroraa = None
 def p_error(p):
-    pass
+    global erroraa
+    error_info = "" 
+    if p:
+        error_info = (f"Syntax error at '{p.value}'", f"line {p.lineno}")
+    else:
+        error_info = ("Syntax error at EOF")
+   
+    erroraa = error_info
 
 # Construir el parser
 parser = yacc.yacc()
 
 #Aqui debe llegar del front una lista de string donde cada espacion representa una linea
-inputLines = ["if()"] 
+# inputLines = ["condition(1<2){string1 = 'jon' string2 = 'raf' condition(string1 == string2){show('No lo veras')}}otherwise_if(2>1){show('RJJ')}otherwise{show('Pi: ' + '3.1416')}"] 
 
-s = [] 
-inIfBlock = False
-ifBlockLines = []
+def formatLines(lines:str):
+    s = [] 
+    inIfBlock = False
+    ifBlockLines = []
 
+    lin = lines.splitlines()
 
-for line in inputLines:
-    if inIfBlock:
-        if line.strip().endswith("}"):
-            ifBlockLines.append(line)
-            ifBlock = ' '.join(ifBlockLines)
-            s.append(ifBlock)  
-            ifBlockLines = []
-            inIfBlock = False
+    for line in lin:
+        if inIfBlock:
+            if line.strip().endswith("}"):
+                ifBlockLines.append(line)
+                ifBlock = ' '.join(ifBlockLines)
+                s.append(ifBlock)  
+                ifBlockLines = []
+                inIfBlock = False
+            else:
+                ifBlockLines.append(line)
         else:
-            ifBlockLines.append(line)
-    else:
-        if line.strip().startswith("condition"):
-            inIfBlock = True
-            ifBlockLines.append(line)
-        else:
-            s.append(line) 
+            if line.strip().startswith("condition"):
+                inIfBlock = True
+                ifBlockLines.append(line)
+            else:
+                s.append(line) 
 
-if ifBlockLines:
-    ifBlock = ' '.join(ifBlockLines)
-    s.append(ifBlock)
+    if ifBlockLines:
+        ifBlock = ' '.join(ifBlockLines)
+        s.append(ifBlock)
+    
+    return s
 
 #La lista S es la lista con la que va a trabajar el parser, una lista de lineas muy bien procesadas
 #Hasta donde se termina este código sirve para concatenar cada linea de una forma especial para nuestro parser
 
-output = []
-for line in s: #Por cada elemento en la lista de entrada procesada
-    try:
-        result = parser.parse(line)
-        if result is not None:
-            output.append(result)
-    except EOFError:
-        break
+def parsear(linesFormat):
+    global erroraa
+    output = []
+    for line in linesFormat: 
+        try:
+            result = parser.parse(line)
+            if erroraa:
+                output.append(('ERROR', erroraa))
+                erroraa = None
+            if result is not None :
+                output.append(result)
+        except EOFError:
+            break
 
-print(result)
+    outputFormat = []
+    for result in output:
+        if type(result) is tuple:
+            if result[0] in ('SHOW', 'ERROR'):
+                outputFormat.append(result[1])
+        elif type(result) is list:
+            if result[0][0] in ('SHOW', 'ERROR'):
+                outputFormat.append(result[0][1])
+
+    return str(outputFormat)
+
+
+
+class CodeInput(BaseModel):
+    code: str
+
+app = FastAPI()
+
+origins = [
+    "http://localhost:5173/",
+    "http://localhost:5173",
+    "http://54.241.139.9/",
+    "http://54.241.139.9"
+]
+
+
+app = FastAPI()
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,  
+    allow_methods=["GET", "POST", "OPTIONS"],  
+    allow_headers=["Content-Type", "Authorization"],  
+)
+
+
+@app.post("/code")
+def evaluate_expression(expression):
+    print(expression)
+    try:
+        lines = formatLines(expression)
+        result = parsear(lines)
+        return {"result": result}
+    except Exception as e:
+        return {"error": str(e)}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, port=8000)
