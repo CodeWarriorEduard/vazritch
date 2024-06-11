@@ -333,12 +333,14 @@ def formatLines(lines:str):
 def parsear(linesFormat):
     global erroraa
     output = []
+    result = None
     for line in linesFormat: 
         try:
-            result = parser.parse(line)
-            if erroraa:
-                output.append(('ERROR', erroraa))
-                erroraa = None
+            if line not in " \t \r\n \r \n":
+                result = parser.parse(line)
+                if erroraa:
+                    output.append(('ERROR', erroraa))
+                    erroraa = None
             if result is not None :
                 output.append(result)
         except EOFError:
