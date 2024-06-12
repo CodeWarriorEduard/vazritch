@@ -524,7 +524,10 @@ def parsear(linesFormat):
             break
 
     outputFormat = viewCheck(output) 
-    return str(outputFormat)
+    res = ""
+    for out in outputFormat:
+        res = res + out + "\n"
+    return res
 
 
 def viewCheck(res):
