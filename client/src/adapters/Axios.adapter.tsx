@@ -24,6 +24,7 @@ class HttpClient{
         console.log(params)
         return this.axiosInstance.post(url, data, { params });
     }
+    
 
 }
 

@@ -7,6 +7,7 @@ const url = process.env.REACT_APP_BACKEND;
 const client = new HttpClient(url?? '');
 
 
+
 async function getHealth(endpoint:string){
 
     try {

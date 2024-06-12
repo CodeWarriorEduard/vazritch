@@ -33,7 +33,7 @@ function EditorC() {
    
     try {
       const response = await processCode('/code', null, { expression: text });
-  
+      console.log(response)
       if (response.error) {
         console.error('Error processing code:', response.error);
         return;
