@@ -78,6 +78,10 @@ def p_factor_var(p):
     else:
         p[0] = variables[p[1]]
 
+def p_factor_equ(p):
+    'factor : EQUALS'
+    p[0] = p[1]
+
 def p_assignment(p):
     'factor : VAR EQUALS expression'
     variables[p[1]] = p[3]
@@ -128,6 +132,32 @@ def p_expression_not(p):
             p[0] = 'Truth'
         else:
             p[0] = 'Lie'
+
+#Compare
+def p_factor_equequ(p):
+    'factor : EQUALSEQUALS'
+    p[0] = p[1]
+
+def p_factor_great(p):
+    'factor : GREATER'
+    p[0] = p[1]
+
+def p_factor_les(p):
+    'factor : LESS'
+    p[0] = p[1]
+
+def p_factor_greatequ(p):
+    'factor : GREATEREQUALS'
+    p[0] = p[1]
+
+
+def p_factor_lesequ(p):
+    'factor : LESSEQUALS'
+    p[0] = p[1]
+
+def p_factor_notEq(p):
+    'factor : NOTEQUALS'
+    p[0] = p[1]
 
 # Definición de operadores de comparación
 def p_expression_comparison(p):
@@ -298,12 +328,17 @@ def p_expression_error(p):
 ## Manejo de funciones
 
 
+def p_factor_function(p):
+    'factor : FUNCTION'
+    p[0] = p[1]
 
+def p_facto_comma(p):
+    'factor : COMMA'
+    p[0] = p[1]
 
 def p_function_definition(p):
     '''function_definition : FUNCTION VAR LPAREN parameters RPAREN LBRACE statements RBRACE'''
     functions[p[2]] = (p[4], p[7])
-
     
 
 def p_parameters(p):
@@ -373,6 +408,9 @@ def p_factor_function_call(p):
 
 # Manejo del While
 
+def p_factor_while(p):
+    'factor : WHILE'
+    p[0] = p[1]
 
 def p_while_loop(p):
     'statement : WHILE LPAREN expression RPAREN LBRACE statements RBRACE'
