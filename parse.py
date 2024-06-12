@@ -533,10 +533,16 @@ def parsear(linesFormat):
 
     return str(outputFormat)
 
-# def viewCheck(output, res):
-#     if type(res) is list:
-#         if
-#     return output
+def viewCheck(output, res):
+    if type(res) is list:
+        if type(res[0]) is tuple:
+            tupla = res[0]
+            if tupla[0] in ('SHOW', 'ERROR'):
+                output.append(tupla[1])
+        else:
+            for element in res[0]:
+                viewCheck(output, element)
+    return output
 
 class CodeInput(BaseModel):
     code: str
