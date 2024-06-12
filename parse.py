@@ -468,12 +468,13 @@ def p_error(p):
 
 
 
-##################333
+
 # Construir el parser
 parser = yacc.yacc()
 
 #Aqui debe llegar del front una lista de string donde cada espacion representa una linea
 # inputLines = ["condition(1<2){string1 = 'jon' string2 = 'raf' condition(string1 == string2){show('No lo veras')}}otherwise_if(2>1){show('RJJ')}otherwise{show('Pi: ' + '3.1416')}"] 
+
 def formatLines(lines:str):
     s = [] 
     ifBlockLines = []
@@ -534,6 +535,9 @@ def parsear(linesFormat):
 
 
 
+class CodeInput(BaseModel):
+    code: str
+
 app = FastAPI()
 
 origins = [
@@ -558,7 +562,8 @@ app.add_middleware(
 
 
 @app.post("/code")
-def run_code(expression):
+def evaluate_expression(expression):
+    print(expression)
     try:
         lines = formatLines(expression)
         print(lines)

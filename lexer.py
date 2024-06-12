@@ -7,16 +7,6 @@ def t_FLOATNUMBER(t):
     t.value = float(t.value)
     return t
 
-# Greater than
-def t_GREATER(t):
-    r'>'
-    return t
-
-# Comma
-def t_COMMA(t):
-    r','
-    return t
-
 # Integer numbers
 def t_INTNUMBER(t):
     r'\d+'
@@ -29,7 +19,7 @@ def t_COMMENT(t):
     t.value = f"{t}"
     return t
 
-# Variable
+# Varible
 def t_VAR(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'VAR')   
@@ -41,10 +31,6 @@ def t_STRING(t):
     t.value = str(t.value[1:-1])
     return t
 
-# Less than
-def t_LESS(t):
-    r'<'
-    return t
 
 # Next Line
 def t_newline(t):
@@ -59,44 +45,44 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-# Test
-data = '''
-22
-1.5 .5
-+ - * /
-()
-{}
-==
->=
-<=
-<!>
-=
-condition
-otherwise_if
-otherwise
-during
-make
-cycle
-and
-or
-not
-miVariable
-mi_variable
-miVar
-"Tremendo"
-process
-show(1<2)
-###comentario
-,
-process
-'''
+# # Test
+# data = '''
 
-# Data input
-lexer.input(data)
+# 22
+# 1.5 .5
+# + - * /
+# ()
+# {}
+# ==
+# >=
+# <=
+# <!>
+# =
+# condition
+# otherwise_if
+# otherwise
+# during
+# make
+# cycle
+# and
+# or
+# not
+# miVariable
+# mi_variable
+# miVar
+# "Tremendo"
+# process
+# show
+# ###comentario
+# ,
+# '''
 
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break  
-    print(f"Type: {tok.type} | Value: {tok.value} | Line: {tok.lineno} | Position: {tok.lexpos}")
+# # Data input
+# lexer.input(data)
+
+# # Tokenize
+# while True:
+#     tok = lexer.token()
+#     if not tok: 
+#         break  
+#     print(f"Type: {tok.type} | Value: {tok.value} | Line: {tok.lineno} | Position: {tok.lexpos}")
