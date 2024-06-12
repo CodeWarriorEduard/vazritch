@@ -523,21 +523,17 @@ def parsear(linesFormat):
         except EOFError:
             break
 
-    outputFormat = []
-    for result in output:
-        outputFormat = viewCheck(outputFormat, result)
-
+    outputFormat = viewCheck(output) 
     return str(outputFormat)
 
-def viewCheck(output, res):
-    if type(res) is list:
-        if type(res[0]) is tuple:
-            tupla = res[0]
-            if tupla[0] in ('SHOW', 'ERROR'):
-                output.append(tupla[1])
-        else:
-            for element in res[0]:
-                viewCheck(output, element)
+
+def viewCheck(res):
+    output = []
+    if isinstance(res, list):
+        for element in res:
+            output.extend(viewCheck(element))
+    elif isinstance(res, tuple) and len(res) > 1 and res[0] in ('SHOW', 'ERROR'):
+        output.append(res[1])
     return output
 
 class CodeInput(BaseModel):
