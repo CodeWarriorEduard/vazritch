@@ -198,7 +198,7 @@ def p_expression_comparison(p):
                 p[0] = 'Truth' if p[1] <= p[3] else 'Lie'
             else:
                 p[0] = ('ERROR',"Cannot compare different types")
-        elif p[2] == '!=':
+        elif p[2] == '<!>':
             p[0] = 'Truth' if p[1] != p[3] else 'Lie'    
     else:
         p[0] = ('ERROR',"Unsupported operation")
@@ -533,7 +533,10 @@ def parsear(linesFormat):
 
     return str(outputFormat)
 
-
+# def viewCheck(output, res):
+#     if type(res) is list:
+#         if
+#     return output
 
 class CodeInput(BaseModel):
     code: str
