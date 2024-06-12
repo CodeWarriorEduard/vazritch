@@ -42,8 +42,13 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
+def t_process(t):
+    r'process'
+    return t
+
 # Build the lexer
 lexer = lex.lex()
+lexer = lex.lex(optimize=True, lextab='lextab')
 
 # # Test
 # data = '''

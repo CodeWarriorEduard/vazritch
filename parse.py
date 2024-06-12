@@ -5,7 +5,33 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+functions = {}
+
 variables = {}
+
+
+def p_program(p):
+    '''program : statements'''
+    p[0] = p[1]
+
+
+def p_statements(p):
+    '''statements : statements statement
+                  | statement'''
+    if len(p) == 3:
+        if isinstance(p[2], tuple) and p[2][0] == 'ERROR':
+            p[0] = p[2]  # Si hay un error, propagalo
+        else:
+            p[0] = p[1] + [p[2]]
+    else:
+        p[0] = [p[1]]
+
+        
+def p_statement(p):
+    '''statement : expression
+                 | function_definition'''
+    p[0] = p[1]
+
 
 # Definición de operadores binarios
 def p_binary_operators(p):
@@ -253,17 +279,6 @@ def p_else_clause(p):
     else:
         p[0] = None
 
-def p_statements(p):
-    '''statements : statements statement
-                  | statement'''
-    if len(p) == 3:
-        p[0] = p[1] + [p[2]]
-    else:
-        p[0] = [p[1]]
-
-def p_statement(p):
-    '''statement : expression'''
-    p[0] = p[1]
 
 def p_empty(p):
     'empty :'
@@ -279,6 +294,128 @@ def p_expression_error(p):
     'expression : error'
     p[0] = ('ERROR', "Unsupported operation")
 
+
+## Manejo de funciones
+
+
+
+
+def p_function_definition(p):
+    '''function_definition : FUNCTION VAR LPAREN parameters RPAREN LBRACE statements RBRACE'''
+    functions[p[2]] = (p[4], p[7])
+
+    
+
+def p_parameters(p):
+    '''parameters : VAR
+                  | VAR COMMA parameters
+                  | empty'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    elif len(p) == 4:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = []
+
+def p_arguments(p):
+    '''arguments : expression
+                 | expression COMMA arguments
+                 | empty'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    elif len(p) == 4:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = []
+
+
+
+def p_function_call(p):
+    'function_call : VAR LPAREN arguments RPAREN'
+    func_name = p[1]
+    if func_name in functions:
+        param_names, func_body = functions[func_name]
+        if len(param_names) != len(p[3]):
+            p[0] = ('ERROR', 'Incorrect number of arguments')
+        else:
+            # Guardar el estado actual de las variables
+            old_vars = variables.copy()
+            # Asignar valores de argumentos a los parámetros
+            for param, arg in zip(param_names, p[3]):
+                variables[param] = arg
+            # Ejecutar el cuerpo de la función
+            result = None
+            for statement in func_body:
+                result = statement
+                if isinstance(statement, tuple) and statement[0] == 'RETURN':
+                    result = statement[1]
+                    break
+            # Restaurar el estado de las variables
+            variables.clear()
+            variables.update(old_vars)
+            p[0] = result
+    else:
+        p[0] = ('ERROR', f"Undefined function '{func_name}'")
+
+
+# Retorno de la función
+def p_return_statement(p):
+    'statement : RETURN expression'
+    p[0] = ('RETURN', p[2])
+
+
+def p_factor_function_call(p):
+    'factor : function_call'
+    p[0] = p[1]
+## Fin de manejo de funciones
+
+
+
+# Manejo del While
+
+
+def p_while_loop(p):
+    'statement : WHILE LPAREN expression RPAREN LBRACE statements RBRACE'
+    steps = 0
+    while evaluate_expression(p[3]) and steps < 20:  
+        execute_statements(p[6]) 
+        steps+=1 
+
+
+def evaluate_expression(expression):
+    result = None
+    try:
+        if isinstance(expression, tuple) and expression[0] == 'ERROR':
+            return expression[1]
+        
+        if isinstance(expression, list):
+            for expr in expression:
+                result = evaluate_expression(expr)
+            return result
+        
+        if isinstance(expression, str) and expression in variables:
+            return variables[expression]
+        
+        if isinstance(expression, str) and expression.isdigit():
+            return int(expression)
+        
+        if isinstance(expression, (int, float)):
+            return expression
+    except Exception as e:
+        return ('ERROR', str(e))
+
+# Esta función ejecuta una lista de declaraciones
+def execute_statements(statements):
+    for statement in statements:
+        if isinstance(statement, tuple) and statement[0] == 'ERROR':
+            return statement[1]
+        
+        if statement[0] == 'SHOW':
+            print(statement[1])
+        
+        if statement[0] == 'RETURN':
+            return statement[1]
+
 # Manejo de errores de sintaxis
 erroraa = None
 def p_error(p):
@@ -291,12 +428,14 @@ def p_error(p):
    
     erroraa = error_info
 
+
+
+##################333
 # Construir el parser
 parser = yacc.yacc()
 
 #Aqui debe llegar del front una lista de string donde cada espacion representa una linea
 # inputLines = ["condition(1<2){string1 = 'jon' string2 = 'raf' condition(string1 == string2){show('No lo veras')}}otherwise_if(2>1){show('RJJ')}otherwise{show('Pi: ' + '3.1416')}"] 
-
 def formatLines(lines:str):
     s = [] 
     ifBlockLines = []
@@ -357,9 +496,6 @@ def parsear(linesFormat):
 
 
 
-class CodeInput(BaseModel):
-    code: str
-
 app = FastAPI()
 
 origins = [
@@ -384,8 +520,7 @@ app.add_middleware(
 
 
 @app.post("/code")
-def evaluate_expression(expression):
-    print(expression)
+def run_code(expression):
     try:
         lines = formatLines(expression)
         print(lines)
@@ -396,4 +531,4 @@ def evaluate_expression(expression):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, port=3000)

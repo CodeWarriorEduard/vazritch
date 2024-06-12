@@ -38,6 +38,8 @@ tokens = [
    'VAR', 
    'STRING',
    "COMMA",
+   "FUNCTION",
+   "RETURN"
 ] + list(reserved.values())
 
 # Operations
