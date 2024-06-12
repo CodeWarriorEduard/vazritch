@@ -525,11 +525,7 @@ def parsear(linesFormat):
 
     outputFormat = []
     for result in output:
-        if type(result) is tuple:
-            if result[0] in ('SHOW', 'ERROR'):
-                outputFormat.append(result[1])
-        elif type(result) is list:
-            outputFormat.append(result)
+        outputFormat = viewCheck(outputFormat, result)
 
     return str(outputFormat)
 
